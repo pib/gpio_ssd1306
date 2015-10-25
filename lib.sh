@@ -72,6 +72,7 @@ do_reset () {
 }
 
 init_display () {
+  enable_pins
   do_reset
   write_command 1 0 1 0 1 1 1 0 # 0xAE display OFF
   write_command 1 1 0 1 0 1 0 1 # 0xD5 set clock div
@@ -99,6 +100,14 @@ init_display () {
   write_command 1 0 1 0 0 1 1 0 # 0xA6 display not inverted
 
   write_command 1 0 1 0 1 1 1 1 # 0xAF display on
+}
+
+clear_display () {
+  for c in `seq 1 128`; do
+    for r in `seq 1 8`; do
+      write_data 0 0 0 0 0 0 0 0
+    done
+  done
 }
 
 write_data () {
