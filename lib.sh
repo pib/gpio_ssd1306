@@ -33,7 +33,7 @@ write_command () {
   set_p $cs 1 # CS off
   set_p $dc 0 # DC low, command mode
   set_p $cs 0 # CS on
-  set_p #d0 0 # Clock low
+  set_p $d0 0 # Clock low
 
   # send bits
   for b in $1 $2 $3 $4 $5 $6 $7 $8; do
@@ -63,9 +63,11 @@ disable_pins () {
 }
 
 do_reset () {
-  set_p $res 0
   set_p $res 1
+  usleep 1000
   set_p $res 0
+  usleep 10000
+  set_p $res 1
   set_p $d0 0
 }
 
