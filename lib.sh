@@ -29,17 +29,33 @@ set_p () {
   echo ${2} > ${gpio}/gpio${1}/value
 }
 
+set_cs () {
+  echo ${1} >&3
+}
+
+set_dc () {
+  echo ${1} >&4
+}
+
+set_d0 () {
+  echo ${1} >&5
+}
+
+set_d1 () {
+  echo ${1} >&6
+}
+
 write_command () {
-  set_p $cs 1 # CS off
-  set_p $dc 0 # DC low, command mode
-  set_p $cs 0 # CS on
-  set_p $d0 0 # Clock low
+  set_cs 1 # CS off
+  set_dc 0 # DC low, command mode
+  set_cs 0 # CS on
+  set_d0 0 # Clock low
 
   # send bits
   for b in $1 $2 $3 $4 $5 $6 $7 $8; do
-    set_p $d1 $b
-    set_p $d0 1 # Up
-    set_p $d0 0 # Down
+    set_d1 $b
+    set_d0 1 # Up
+    set_d0 0 # Down
   done
 }
 
@@ -50,9 +66,15 @@ enable_pins () {
   enable_p $dc high
   enable_p $d0 low
   enable_p $d1 low
+  use_display
 }
 
 disable_pins () {
+  exec 3>&-
+  exec 4>&-
+  exec 5>&-
+  exec 6>&-
+
   # Set as input and disable RES, CS, DC, D0, D1 as output
   disable_p $res
   disable_p $cs
@@ -68,7 +90,14 @@ do_reset () {
   set_p $res 0
   usleep 10000
   set_p $res 1
-  set_p $d0 0
+  set_d0 0
+}
+
+use_display () {
+  exec 3<>${gpio}/gpio${cs}/value
+  exec 4<>${gpio}/gpio${dc}/value
+  exec 5<>${gpio}/gpio${d0}/value
+  exec 6<>${gpio}/gpio${d1}/value
 }
 
 init_display () {
@@ -111,15 +140,15 @@ clear_display () {
 }
 
 write_data () {
-  set_p $cs 1 # CS off
-  set_p $dc 1 # DC high, data mode
-  set_p $cs 0 # CS on
-  set_p $d0 0 # Clock low
+  set_cs 1 # CS off
+  set_dc 1 # DC high, data mode
+  set_cs 0 # CS on
+  set_d0 0 # Clock low
 
   # send bits
   for b in $1 $2 $3 $4 $5 $6 $7 $8; do
-    set_p $d1 $b
-    set_p $d0 1 # Up
-    set_p $d0 0 # Down
+    set_d1 $b
+    set_d0 1 # Up
+    set_d0 0 # Down
   done
 }
