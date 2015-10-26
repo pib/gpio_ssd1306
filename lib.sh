@@ -8,7 +8,6 @@
 # XIO-P4 (411): DC
 # XIO-P5 (412): CS
 gpio=/sys/class/gpio
-exp=${gpio}/export
 d0=408
 d1=409
 res=410
