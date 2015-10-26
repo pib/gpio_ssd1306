@@ -5,6 +5,8 @@ source lib.sh
 # Scrolls the screen diagonally.
 # Note that you can't draw to the screen while scrolling is going on.
 
+use_display
+
 write_command 0 0 1 0 1 0 1 0 # 0x27 left and vertical scroll
 write_command 0 0 0 0 0 0 0 0 # 0x00 this byte left intentionally blank
 write_command 0 0 0 0 0 0 0 0 # 0x00 start page address (last 3 bits)
