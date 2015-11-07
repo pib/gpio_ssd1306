@@ -100,9 +100,11 @@ chars = [
 b = " "
 print "#!/bin/sh"
 print "write_text () {"
+print "  written=0"
 print "  for i in `seq 0 ${#1}`; do"
 print "    if [[ $i != 0 ]]; then"
 print "      write_data 0 0 0 0 0 0 0 0"
+print "      written=$((written+1))"
 print "    fi"
 print '    case "${1:$i:1}" in'
 for i in range(0, len(chars), 5):
@@ -113,7 +115,9 @@ for i in range(0, len(chars), 5):
     for c in range(0, 5):
         print "      write_data", " ".join("{:08b}".format(chars[i+c]))
     b = chr(ord(b)+1)
+    print "      written=$((written+5))"
     print "      ;;"
 print "    esac"
 print '  done'
+print "  for i in `seq 0 $((128-written))`; do write_data 0 0 0 0 0 0 0 0; done"
 print "}"
