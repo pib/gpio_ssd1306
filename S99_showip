@@ -5,6 +5,7 @@
 case "$1" in
 	start)
 		echo -n "Starting showip"
+		cd /root
 		start-stop-daemon -S -q -m -b -p /var/run/showip.pid --exec /root/watch_connman.sh
 		echo "done."
 		;;
