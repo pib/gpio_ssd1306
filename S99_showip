@@ -1,0 +1,24 @@
+#!/bin/sh
+
+# Init script for running IP display
+
+case "$1" in
+	start)
+		echo -n "Starting showip"
+		start-stop-daemon -S -q -m -b -p /var/run/showip.pid --exec /root/watch_connman.sh
+		echo "done."
+		;;
+	stop)
+		echo -n "Stopping showip"
+		start-stop-daemon -K -q -p /var/run/showip.pid
+		echo "done."
+		;;
+	restart)
+		$0 stop
+		sleep 1
+		$0 start
+		;;
+	*)
+		echo "usage: $0 {start|stop|restart}"
+		;;
+esac
